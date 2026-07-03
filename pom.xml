@@ -36,7 +36,7 @@
     </properties>
 
     <modules>
-
+        <module>common-library</module>
     </modules>
 
 </project>
