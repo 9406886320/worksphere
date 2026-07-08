@@ -3,6 +3,7 @@ package com.worksphere.employee.controller;
 import com.worksphere.employee.dto.EmployeeRequest;
 import com.worksphere.employee.dto.EmployeeResponse;
 import com.worksphere.employee.service.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class EmployeeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeResponse createEmployee(
-            @RequestBody EmployeeRequest request) {
+            @Valid @RequestBody EmployeeRequest request) {
 
         return employeeService.createEmployee(request);
 
@@ -41,7 +42,7 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeResponse> updateEmployee(
-            @PathVariable("id") Long id,
+            @PathVariable("id") Long id, @Valid
             @RequestBody EmployeeRequest request) {
 
         EmployeeResponse response = employeeService.updateEmployee(id, request);
