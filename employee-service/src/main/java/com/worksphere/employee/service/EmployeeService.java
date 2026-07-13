@@ -1,8 +1,8 @@
 package com.worksphere.employee.service;
+import com.worksphere.employee.dto.EmployeePageResponse;
 import com.worksphere.employee.dto.EmployeeRequest;
 import com.worksphere.employee.dto.EmployeeResponse;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 
 public interface EmployeeService {
@@ -11,7 +11,10 @@ public interface EmployeeService {
 
     EmployeeResponse  getEmployeeById(Long id);
 
-  List<EmployeeResponse> getAllEmployees();
+  EmployeePageResponse getAllEmployees(int page,
+                                       int size,
+                                       String sortBy,
+                                       String sortDir);
 
   EmployeeResponse updateEmployee(Long id, EmployeeRequest request);
 
