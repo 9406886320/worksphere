@@ -17,6 +17,8 @@ public record EmployeeResponse(
         String email,
 
         @Schema(description = "Salary", example = "65000")
-        Double salary
+        Double salary,
+
+        Long departmentId
 ) {
 }

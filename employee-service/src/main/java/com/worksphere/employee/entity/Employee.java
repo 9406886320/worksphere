@@ -18,6 +18,9 @@ public class Employee {
 
     private Double salary;
 
+    @Column(nullable = false)
+    private Long departmentId;
+
     // Default Constructor
     public Employee() {
     }
@@ -44,6 +47,10 @@ public class Employee {
         return salary;
     }
 
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
     // Setters
 
     public void setId(Long id) {
@@ -64,5 +71,9 @@ public class Employee {
 
     public void setSalary(Double salary) {
         this.salary = salary;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
     }
 }

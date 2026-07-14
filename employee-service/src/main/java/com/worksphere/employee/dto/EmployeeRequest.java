@@ -3,6 +3,7 @@ package com.worksphere.employee.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public record EmployeeRequest(
@@ -35,7 +36,11 @@ public record EmployeeRequest(
                 example = "65000"
         )
         @Positive(message = "Salary must be greater than zero")
-        Double salary
+        Double salary,
+
+        @Schema(example = "1")
+        @NotNull(message = "Department Id is required")
+        Long departmentId
 
 ) {
 

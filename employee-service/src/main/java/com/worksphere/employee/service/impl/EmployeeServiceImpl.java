@@ -40,6 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setLastName(request.lastName());
         employee.setEmail(request.email());
         employee.setSalary(request.salary());
+        employee.setDepartmentId(request.departmentId());
 
         Employee savedEmployee = employeeRepository.save(employee);
         log.info("Employee created successfully with ID: {}", savedEmployee.getId());
@@ -48,7 +49,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 savedEmployee.getFirstName(),
                 savedEmployee.getLastName(),
                 savedEmployee.getEmail(),
-                savedEmployee.getSalary()
+                savedEmployee.getSalary(),
+                savedEmployee.getDepartmentId()
         );
     }
 
@@ -71,7 +73,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 employee.getFirstName(),
                 employee.getLastName(),
                 employee.getEmail(),
-                employee.getSalary()
+                employee.getSalary(),
+                employee.getDepartmentId()
         );
     }
 
@@ -101,7 +104,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                         employee.getFirstName(),
                         employee.getLastName(),
                         employee.getEmail(),
-                        employee.getSalary()
+                        employee.getSalary(),
+                        employee.getDepartmentId()
                 ))
                 .toList();
 
@@ -136,6 +140,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setLastName(request.lastName());
         employee.setEmail(request.email());
         employee.setSalary(request.salary());
+        employee.setDepartmentId(request.departmentId());
 
         Employee updatedEmployee = employeeRepository.save(employee);
 
@@ -146,7 +151,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 updatedEmployee.getFirstName(),
                 updatedEmployee.getLastName(),
                 updatedEmployee.getEmail(),
-                updatedEmployee.getSalary()
+                updatedEmployee.getSalary(),
+                updatedEmployee.getDepartmentId()
         );
     }
 
