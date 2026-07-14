@@ -3,6 +3,7 @@ package com.worksphere.employee.controller;
 import com.worksphere.employee.dto.EmployeePageResponse;
 import com.worksphere.employee.dto.EmployeeRequest;
 import com.worksphere.employee.dto.EmployeeResponse;
+import com.worksphere.employee.dto.EmployeeWithDepartmentResponse;
 import com.worksphere.employee.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -45,11 +46,19 @@ public class EmployeeController {
             summary = "Get Employee By ID",
             description = "Returns employee details using employee ID."
     )
-    @GetMapping("/{id}")
-    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable("id") Long id) {
+//    @GetMapping("/{id}")
+//    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable("id") Long id) {
+//
+//        return ResponseEntity.ok(employeeService.getEmployeeById(id));
+//    }
 
-        return ResponseEntity.ok(employeeService.getEmployeeById(id));
+    @GetMapping("/{id}")
+    public EmployeeWithDepartmentResponse getEmployeeById(
+            @PathVariable Long id) {
+
+        return employeeService.getEmployeeById(id);
     }
+
 
     @Operation(
             summary = "Get All Employees",

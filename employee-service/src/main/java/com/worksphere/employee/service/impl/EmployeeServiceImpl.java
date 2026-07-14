@@ -1,9 +1,7 @@
 package com.worksphere.employee.service.impl;
 
 import com.worksphere.common.exception.ResourceNotFoundException;
-import com.worksphere.employee.dto.EmployeePageResponse;
-import com.worksphere.employee.dto.EmployeeRequest;
-import com.worksphere.employee.dto.EmployeeResponse;
+import com.worksphere.employee.dto.*;
 import com.worksphere.employee.entity.Employee;
 import com.worksphere.employee.repository.EmployeeRepository;
 import com.worksphere.employee.service.EmployeeService;
@@ -17,18 +15,21 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.worksphere.employee.client.DepartmentClient;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
-
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
-
+    private final DepartmentClient departmentClient;
     private static final Logger log =
             LoggerFactory.getLogger(EmployeeServiceImpl.class);
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository,
+                               DepartmentClient departmentClient) {
+        this.employeeRepository = employeeRepository;
+        this.departmentClient = departmentClient;
+    }
+
+
 
     @Override
     public EmployeeResponse createEmployee(EmployeeRequest request) {
@@ -54,10 +55,32 @@ public class EmployeeServiceImpl implements EmployeeService {
         );
     }
 
-    @Override
-    public EmployeeResponse getEmployeeById(Long id) {
+//    @Override
+//    public EmployeeResponse getEmployeeById(Long id) {
+//
+//        log.info("Fetching employee with ID: {}", id);
+//
+//        Employee employee = employeeRepository.findById(id)
+//                .orElseThrow(() ->
+//                        new ResourceNotFoundException(
+//                                "Employee",
+//                                "id",
+//                                id
+//                        ));
+//        log.info("Employee found with ID: {}", id);
+//
+//        return new EmployeeResponse(
+//                employee.getId(),
+//                employee.getFirstName(),
+//                employee.getLastName(),
+//                employee.getEmail(),
+//                employee.getSalary(),
+//                employee.getDepartmentId()
+//        );
+//    }
 
-        log.info("Fetching employee with ID: {}", id);
+    @Override
+    public EmployeeWithDepartmentResponse getEmployeeById(Long id) {
 
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() ->
@@ -66,19 +89,19 @@ public class EmployeeServiceImpl implements EmployeeService {
                                 "id",
                                 id
                         ));
-        log.info("Employee found with ID: {}", id);
 
-        return new EmployeeResponse(
+        DepartmentResponse department =
+                departmentClient.getDepartment(employee.getDepartmentId());
+
+        return new EmployeeWithDepartmentResponse(
                 employee.getId(),
                 employee.getFirstName(),
                 employee.getLastName(),
                 employee.getEmail(),
                 employee.getSalary(),
-                employee.getDepartmentId()
+                department
         );
     }
-
-
     @Override
     public EmployeePageResponse getAllEmployees(
             int page,
