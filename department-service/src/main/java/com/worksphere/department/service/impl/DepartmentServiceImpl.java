@@ -4,6 +4,7 @@ import com.worksphere.common.exception.ResourceNotFoundException;
 import com.worksphere.department.dto.DepartmentPageResponse;
 import com.worksphere.department.dto.DepartmentResponse;
 import com.worksphere.department.entity.Department;
+import com.worksphere.department.mapper.DepartmentMapper;
 import com.worksphere.department.repository.DepartmentRepository;
 import com.worksphere.department.service.DepartmentService;
 import org.springframework.stereotype.Service;
@@ -27,22 +28,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentResponse createDepartment(DepartmentRequest request) {
 
-        Department department = new Department();
-
-        department.setDepartmentName(request.departmentName());
-        department.setDepartmentCode(request.departmentCode());
-        department.setDepartmentHead(request.departmentHead());
-        department.setLocation(request.location());
+        Department department = DepartmentMapper.toEntity(request);
 
         Department savedDepartment = departmentRepository.save(department);
 
-        return new DepartmentResponse(
-                savedDepartment.getId(),
-                savedDepartment.getDepartmentName(),
-                savedDepartment.getDepartmentCode(),
-                savedDepartment.getDepartmentHead(),
-                savedDepartment.getLocation()
-        );
+        return DepartmentMapper.toResponse(savedDepartment);
     }
     @Override
     public DepartmentResponse getDepartmentById(Long id) {
@@ -54,13 +44,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                         id
                 ));
 
-        return new DepartmentResponse(
-                department.getId(),
-                department.getDepartmentName(),
-                department.getDepartmentCode(),
-                department.getDepartmentHead(),
-                department.getLocation()
-        );
+        return DepartmentMapper.toResponse(department);
     }
 
     @Override
@@ -80,13 +64,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         List<DepartmentResponse> departments = departmentPage.getContent()
                 .stream()
-                .map(department -> new DepartmentResponse(
-                        department.getId(),
-                        department.getDepartmentName(),
-                        department.getDepartmentCode(),
-                        department.getDepartmentHead(),
-                        department.getLocation()
-                ))
+                .map(DepartmentMapper::toResponse)
                 .toList();
 
         return new DepartmentPageResponse(
@@ -111,20 +89,11 @@ public class DepartmentServiceImpl implements DepartmentService {
                                 "id",
                                 id
                         ));
-        department.setDepartmentName(request.departmentName());
-        department.setDepartmentCode(request.departmentCode());
-        department.setDepartmentHead(request.departmentHead());
-        department.setLocation(request.location());
+        DepartmentMapper.updateEntity(department, request);
 
         Department updatedDepartment = departmentRepository.save(department);
 
-        return new DepartmentResponse(
-                updatedDepartment.getId(),
-                updatedDepartment.getDepartmentName(),
-                updatedDepartment.getDepartmentCode(),
-                updatedDepartment.getDepartmentHead(),
-                updatedDepartment.getLocation()
-        );
+        return DepartmentMapper.toResponse(updatedDepartment);
     }
 
 

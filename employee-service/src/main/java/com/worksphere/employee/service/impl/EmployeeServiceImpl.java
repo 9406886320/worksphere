@@ -3,6 +3,7 @@ package com.worksphere.employee.service.impl;
 import com.worksphere.common.exception.ResourceNotFoundException;
 import com.worksphere.employee.dto.*;
 import com.worksphere.employee.entity.Employee;
+import com.worksphere.employee.mapper.EmployeeMapper;
 import com.worksphere.employee.repository.EmployeeRepository;
 import com.worksphere.employee.service.EmployeeService;
 import org.springframework.stereotype.Service;
@@ -35,24 +36,30 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeResponse createEmployee(EmployeeRequest request) {
         log.info("Creating employee with email: {}", request.email());
 
-        Employee employee = new Employee();
+//        Employee employee = new Employee();
+//
+//        employee.setFirstName(request.firstName());
+//        employee.setLastName(request.lastName());
+//        employee.setEmail(request.email());
+//        employee.setSalary(request.salary());
+//        employee.setDepartmentId(request.departmentId());
 
-        employee.setFirstName(request.firstName());
-        employee.setLastName(request.lastName());
-        employee.setEmail(request.email());
-        employee.setSalary(request.salary());
-        employee.setDepartmentId(request.departmentId());
+
+        // Mapper Added
+        Employee employee = EmployeeMapper.toEntity(request);
 
         Employee savedEmployee = employeeRepository.save(employee);
         log.info("Employee created successfully with ID: {}", savedEmployee.getId());
-        return new EmployeeResponse(
-                savedEmployee.getId(),
-                savedEmployee.getFirstName(),
-                savedEmployee.getLastName(),
-                savedEmployee.getEmail(),
-                savedEmployee.getSalary(),
-                savedEmployee.getDepartmentId()
-        );
+//        return new EmployeeResponse(
+//                savedEmployee.getId(),
+//                savedEmployee.getFirstName(),
+//                savedEmployee.getLastName(),
+//                savedEmployee.getEmail(),
+//                savedEmployee.getSalary(),
+//                savedEmployee.getDepartmentId()
+//        );
+       //Added Mapper Feature
+        return EmployeeMapper.toResponse(savedEmployee);
     }
 
 //    @Override
@@ -122,15 +129,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         List<EmployeeResponse> employees = employeePage.getContent()
                 .stream()
-                .map(employee -> new EmployeeResponse(
-                        employee.getId(),
-                        employee.getFirstName(),
-                        employee.getLastName(),
-                        employee.getEmail(),
-                        employee.getSalary(),
-                        employee.getDepartmentId()
-                ))
-                .toList();
+//                .map(employee -> new EmployeeResponse(
+//                        employee.getId(),
+//                        employee.getFirstName(),
+//                        employee.getLastName(),
+//                        employee.getEmail(),
+//                        employee.getSalary(),
+//                        employee.getDepartmentId()
+//                ))
+                //Mapper added
+                .map(EmployeeMapper::toResponse).toList();
 
 
         log.info("Successfully fetched {} employees",
@@ -159,24 +167,30 @@ public class EmployeeServiceImpl implements EmployeeService {
                                 "id",
                                 id));
 
-        employee.setFirstName(request.firstName());
-        employee.setLastName(request.lastName());
-        employee.setEmail(request.email());
-        employee.setSalary(request.salary());
-        employee.setDepartmentId(request.departmentId());
+//        employee.setFirstName(request.firstName());
+//        employee.setLastName(request.lastName());
+//        employee.setEmail(request.email());
+//        employee.setSalary(request.salary());
+//        employee.setDepartmentId(request.departmentId());
+
+
+        //Mapper Added
+        EmployeeMapper.updateEntity(employee, request);
 
         Employee updatedEmployee = employeeRepository.save(employee);
 
         log.info("Employee updated successfully with ID: {}", id);
 
-        return new EmployeeResponse(
-                updatedEmployee.getId(),
-                updatedEmployee.getFirstName(),
-                updatedEmployee.getLastName(),
-                updatedEmployee.getEmail(),
-                updatedEmployee.getSalary(),
-                updatedEmployee.getDepartmentId()
-        );
+//        return new EmployeeResponse(
+//                updatedEmployee.getId(),
+//                updatedEmployee.getFirstName(),
+//                updatedEmployee.getLastName(),
+//                updatedEmployee.getEmail(),
+//                updatedEmployee.getSalary(),
+//                updatedEmployee.getDepartmentId()
+//        );
+  //Mapper added
+        return EmployeeMapper.toResponse(updatedEmployee);
     }
 
     @Override
