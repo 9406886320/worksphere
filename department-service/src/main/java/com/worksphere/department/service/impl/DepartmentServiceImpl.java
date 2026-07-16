@@ -13,13 +13,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final DepartmentRepository departmentRepository;
+
+    private static final Logger log =
+            LoggerFactory.getLogger(DepartmentServiceImpl.class);
 
     public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
         this.departmentRepository = departmentRepository;
@@ -28,21 +32,33 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentResponse createDepartment(DepartmentRequest request) {
 
+        log.info("Creating department with code: {}", request.departmentCode());
+
         Department department = DepartmentMapper.toEntity(request);
 
         Department savedDepartment = departmentRepository.save(department);
+
+        log.info("Department created successfully with id: {}", savedDepartment.getId());
 
         return DepartmentMapper.toResponse(savedDepartment);
     }
     @Override
     public DepartmentResponse getDepartmentById(Long id) {
 
+        log.info("Fetching department with id: {}", id);
+
+
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() ->  new ResourceNotFoundException(
-                        "Department",
-                        "id",
-                        id
-                ));
+                .orElseThrow(() -> {
+
+                    log.warn("Department not found with id: {}", id);
+
+                    return new ResourceNotFoundException(
+                            "Department",
+                            "id",
+                            id
+                    );
+                });
 
         return DepartmentMapper.toResponse(department);
     }
@@ -54,6 +70,8 @@ public class DepartmentServiceImpl implements DepartmentService {
             String sortBy,
             String sortDir) {
 
+        log.info("Fetching all departments. Page: {}, Size: {}", page, size);
+
         Sort sort = sortDir.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
@@ -62,10 +80,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         Page<Department> departmentPage = departmentRepository.findAll(pageable);
 
+        log.info("Retrieved {} departments", departmentPage.getNumberOfElements());
+
         List<DepartmentResponse> departments = departmentPage.getContent()
                 .stream()
                 .map(DepartmentMapper::toResponse)
                 .toList();
+
 
         return new DepartmentPageResponse(
                 departments,
@@ -81,7 +102,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public DepartmentResponse updateDepartment(
             Long id,
             DepartmentRequest request) {
-
+        log.info("Updating department with id: {}", id);
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
@@ -92,21 +113,22 @@ public class DepartmentServiceImpl implements DepartmentService {
         DepartmentMapper.updateEntity(department, request);
 
         Department updatedDepartment = departmentRepository.save(department);
-
+        log.info("Department updated successfully with id: {}", updatedDepartment.getId());
         return DepartmentMapper.toResponse(updatedDepartment);
     }
 
 
     @Override
     public void deleteDepartment(Long id) {
-
+        log.info("Deleting department with id: {}", id);
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
+                .orElseThrow(() -> {log.warn("Department not found with id: {}", id);
+                       return  new ResourceNotFoundException(
                                 "Department",
                                 "id",
                                 id
-                        ));
+                       );
+                });
 
         departmentRepository.delete(department);
     }
