@@ -1,6 +1,7 @@
 package com.worksphere.employee.service.impl;
 
 import com.worksphere.common.exception.ResourceNotFoundException;
+import com.worksphere.employee.client.DepartmentFeignClient;
 import com.worksphere.employee.dto.*;
 import com.worksphere.employee.entity.Employee;
 import com.worksphere.employee.mapper.EmployeeMapper;
@@ -15,18 +16,21 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.worksphere.employee.client.DepartmentClient;
+import com.worksphere.employee.client.DepartmentRestClient;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
-    private final DepartmentClient departmentClient;
+    private final DepartmentRestClient departmentRestClient;
+    private final DepartmentFeignClient departmentFeignClient;
     private static final Logger log =
             LoggerFactory.getLogger(EmployeeServiceImpl.class);
     public EmployeeServiceImpl(EmployeeRepository employeeRepository,
-                               DepartmentClient departmentClient) {
+                               DepartmentRestClient departmentClient,
+                               DepartmentFeignClient departmentFeignClient) {
         this.employeeRepository = employeeRepository;
-        this.departmentClient = departmentClient;
+        this.departmentRestClient = departmentClient;
+        this.departmentFeignClient = departmentFeignClient;
     }
 
 
@@ -86,7 +90,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 //    }
 
     @Override
-    public EmployeeWithDepartmentResponse getEmployeeById(Long id) {
+    public EmployeeWithDepartmentResponse getEmployeeWithDepartmentFeign(Long id) {
+
+        log.info("Fetching employee with department using OpenFeign. Employee Id: {}", id);
 
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() ->
@@ -97,17 +103,36 @@ public class EmployeeServiceImpl implements EmployeeService {
                         ));
 
         DepartmentResponse department =
-                departmentClient.getDepartment(employee.getDepartmentId());
+                departmentFeignClient.getDepartment(employee.getDepartmentId());
 
         return new EmployeeWithDepartmentResponse(
-                employee.getId(),
-                employee.getFirstName(),
-                employee.getLastName(),
-                employee.getEmail(),
-                employee.getSalary(),
+                EmployeeMapper.toResponse(employee),
                 department
         );
     }
+
+    @Override
+    public EmployeeWithDepartmentResponse getEmployeeWithDepartmentRest(Long id) {
+
+        log.info("Fetching employee with department using RestClient. Employee Id: {}", id);
+
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Employee",
+                                "id",
+                                id
+                        ));
+
+        DepartmentResponse department =
+                departmentRestClient.getDepartment(employee.getDepartmentId());
+
+        return new EmployeeWithDepartmentResponse(
+                EmployeeMapper.toResponse(employee),
+                department
+        );
+    }
+
     @Override
     public EmployeePageResponse getAllEmployees(
             int page,
@@ -188,7 +213,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 //                updatedEmployee.getSalary(),
 //                updatedEmployee.getDepartmentId()
 //        );
-  //Mapper added
+
+        //Mapper added
         return EmployeeMapper.toResponse(updatedEmployee);
     }
 

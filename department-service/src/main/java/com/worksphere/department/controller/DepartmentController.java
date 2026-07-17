@@ -35,7 +35,7 @@ public class DepartmentController {
     )
     @GetMapping("/{id}")
     public DepartmentResponse getDepartmentById(
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
 
         return departmentService.getDepartmentById(id);
     }
@@ -46,16 +46,12 @@ public class DepartmentController {
     )
     @GetMapping
     public DepartmentPageResponse getAllDepartments(
-
             @RequestParam(defaultValue = "0")
             int page,
-
             @RequestParam(defaultValue = "5")
             int size,
-
             @RequestParam(defaultValue = "departmentName")
             String sortBy,
-
             @RequestParam(defaultValue = "asc")
             String sortDir) {
 
@@ -72,12 +68,7 @@ public class DepartmentController {
     )
     @PutMapping("/{id}")
     public DepartmentResponse updateDepartment(
-
-            @PathVariable Long id,
-
-            @Valid
-            @RequestBody
-            DepartmentRequest request) {
+            @PathVariable("id") Long id, @Valid @RequestBody DepartmentRequest request) {
 
         return departmentService.updateDepartment(id, request);
     }
@@ -87,8 +78,7 @@ public class DepartmentController {
             description = "Deletes a department."
     )
     @DeleteMapping("/{id}")
-    public void deleteDepartment(
-            @PathVariable Long id) {
+    public void deleteDepartment(@PathVariable("id") Long id) {
 
         departmentService.deleteDepartment(id);
     }

@@ -1,0 +1,16 @@
+package com.worksphere.employee.client;
+
+import com.worksphere.employee.dto.DepartmentResponse;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+@FeignClient(
+        name = "department-service",
+        url = "${department.service.url}"
+)
+public interface DepartmentFeignClient {
+
+    @GetMapping("/api/v1/departments/{id}")
+    DepartmentResponse getDepartment(@PathVariable("id")  Long id);
+}

@@ -12,7 +12,9 @@ public interface EmployeeService {
 
 //    EmployeeResponse  getEmployeeById(Long id);
 
-  EmployeeWithDepartmentResponse getEmployeeById(Long id);
+  EmployeeWithDepartmentResponse getEmployeeWithDepartmentRest(Long id);
+
+  EmployeeWithDepartmentResponse getEmployeeWithDepartmentFeign(Long id);
 
   EmployeePageResponse getAllEmployees(int page,
                                        int size,

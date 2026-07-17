@@ -8,7 +8,7 @@ import org.springframework.web.client.RestClient;
 @Configuration
 public class RestClientConfig {
 
-    @Value("${department-service.base-url}")
+    @Value("${department.service.url}")
     private String departmentServiceUrl;
 
     @Bean

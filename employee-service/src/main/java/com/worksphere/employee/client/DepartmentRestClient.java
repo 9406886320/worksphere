@@ -5,22 +5,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+
 @Component
-public class DepartmentClient {
+public class DepartmentRestClient {
 
     private final RestClient restClient;
 
-    @Value("${department-service.base-url}")
+    @Value("${department.service.url}")
     private String departmentServiceUrl;
 
-    public DepartmentClient(RestClient restClient) {
+    public DepartmentRestClient(RestClient restClient) {
         this.restClient = restClient;
     }
 
     public DepartmentResponse getDepartment(Long departmentId) {
 
         return restClient.get()
-                .uri(departmentServiceUrl + "/api/v1/departments/{id}", departmentId)
+                .uri("/api/v1/departments/{id}", departmentId)
                 .retrieve()
                 .body(DepartmentResponse.class);
     }

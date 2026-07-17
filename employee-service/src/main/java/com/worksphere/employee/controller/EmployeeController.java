@@ -39,7 +39,6 @@ public class EmployeeController {
             @Valid @RequestBody EmployeeRequest request) {
 
         return employeeService.createEmployee(request);
-
     }
 
     @Operation(
@@ -52,11 +51,21 @@ public class EmployeeController {
 //        return ResponseEntity.ok(employeeService.getEmployeeById(id));
 //    }
 
-    @GetMapping("/{id}")
-    public EmployeeWithDepartmentResponse getEmployeeById(
-            @PathVariable Long id) {
+    // This API call will flow through RestClient implementation
+    @GetMapping("/{id}/rest")
+    public ResponseEntity<EmployeeWithDepartmentResponse> getEmployeeWithDepartmentRest(
+            @PathVariable("id") Long id) {
 
-        return employeeService.getEmployeeById(id);
+        return ResponseEntity.ok(employeeService.getEmployeeWithDepartmentRest(id));
+    }
+
+
+    // This API call will flow through FeginClient implementation
+    @GetMapping("/{id}/feign")
+    public ResponseEntity<EmployeeWithDepartmentResponse> getEmployeeWithDepartmentFeign(
+            @PathVariable("id") Long id) {
+
+        return ResponseEntity.ok(employeeService.getEmployeeWithDepartmentFeign(id));
     }
 
 
@@ -73,7 +82,6 @@ public class EmployeeController {
             @RequestParam(name = "sortDir", defaultValue = "asc") String sortDir
 
     ) {
-
         return ResponseEntity.ok(
                 employeeService.getAllEmployees(
                         page,

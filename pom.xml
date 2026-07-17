@@ -8,9 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.worksphere</groupId>
-
     <artifactId>worksphere-parent</artifactId>
-
     <version>1.0.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
@@ -21,56 +19,101 @@
         Parent project for WorkSphere Enterprise Platform
     </description>
 
+    <!-- ========================= -->
+    <!-- Project Properties -->
+    <!-- ========================= -->
+
     <properties>
 
         <java.version>21</java.version>
 
         <spring.boot.version>3.5.4</spring.boot.version>
 
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <spring-cloud.version>2025.0.0</spring-cloud.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     </properties>
 
+    <!-- ========================= -->
+    <!-- Dependency Management -->
+    <!-- ========================= -->
+
     <dependencyManagement>
 
         <dependencies>
 
+            <!-- Spring Boot BOM -->
             <dependency>
-
                 <groupId>org.springframework.boot</groupId>
-
                 <artifactId>spring-boot-dependencies</artifactId>
-
                 <version>${spring.boot.version}</version>
-
                 <type>pom</type>
-
                 <scope>import</scope>
+            </dependency>
 
+            <!-- Spring Cloud BOM -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
         </dependencies>
 
     </dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-        </dependency>
-    </dependencies>
+
+    <!-- ========================= -->
+    <!-- Build Plugins -->
+    <!-- ========================= -->
+
+    <build>
+
+        <pluginManagement>
+
+            <plugins>
+
+                <plugin>
+
+                    <groupId>org.apache.maven.plugins</groupId>
+
+                    <artifactId>maven-compiler-plugin</artifactId>
+
+                    <version>3.13.0</version>
+
+                    <configuration>
+
+                        <source>${java.version}</source>
+
+                        <target>${java.version}</target>
+
+                        <!-- Preserve method parameter names -->
+                        <parameters>true</parameters>
+
+                    </configuration>
+
+                </plugin>
+
+            </plugins>
+
+        </pluginManagement>
+
+    </build>
+
+    <!-- ========================= -->
+    <!-- Modules -->
+    <!-- ========================= -->
 
     <modules>
+
         <module>common-library</module>
+
         <module>employee-service</module>
+
         <module>department-service</module>
+
     </modules>
 
 </project>
