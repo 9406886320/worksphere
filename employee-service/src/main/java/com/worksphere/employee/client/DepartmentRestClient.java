@@ -11,8 +11,6 @@ public class DepartmentRestClient {
 
     private final RestClient restClient;
 
-    @Value("${department.service.url}")
-    private String departmentServiceUrl;
 
     public DepartmentRestClient(RestClient restClient) {
         this.restClient = restClient;
