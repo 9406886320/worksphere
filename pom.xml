@@ -109,11 +109,10 @@
     <modules>
 
         <module>common-library</module>
-
         <module>employee-service</module>
-
         <module>department-service</module>
         <module>eureka-server</module>
+        <module>api-gateway</module>
 
     </modules>
 
